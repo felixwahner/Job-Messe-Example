@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --disable-host-check",
-    "build": "ng build",
+    "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "deploy": "ng build --configuration production --output-path=dist/angular-ci-cd --base-href=/angular-ci-cd/",
     "test": "ng test"
