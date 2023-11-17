@@ -1,0 +1,38 @@
+<h2>Diese Unternehmen sind auf der Jobmesse zu finden:</h2>
+<div class="grid-container">
+	<mat-accordion>
+		@for (exhibitor of exhibitors; track exhibitor.id) {
+		<mat-expansion-panel>
+			<mat-expansion-panel-header>
+				<mat-panel-title>
+					{{ exhibitor.name }}
+				</mat-panel-title>
+				<mat-panel-description>
+					{{ exhibitor.jobTypes.join(", ") }}
+					<mat-icon
+						[color]="exhibitor.isFavorite ? 'warn' : 'default'"
+						>favorite</mat-icon
+					>
+				</mat-panel-description>
+			</mat-expansion-panel-header>
+			<img
+				class="responsive"
+				mat-card-image
+				[src]="exhibitor.logoUrl"
+				[alt]="'Logo von ' + exhibitor.name"
+			/>
+			<p>
+				{{ exhibitor.text }}
+			</p>
+			<button
+				(click)="toggleFavorite(exhibitor)"
+				mat-stroked-button
+				[color]="exhibitor.isFavorite ? 'warn' : 'default'"
+				aria-label="Favorisieren"
+			>
+				Favorit<mat-icon>favorite</mat-icon>
+			</button>
+		</mat-expansion-panel>
+		}
+	</mat-accordion>
+</div>

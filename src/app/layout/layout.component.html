@@ -1,0 +1,22 @@
+<div class="layout-container">
+	<mat-toolbar color="primary" class="toolbar">
+		<mat-toolbar-row>
+			<h1>Jobmesse</h1>
+			<div class="spacer"></div>
+			<mat-button-toggle-group
+				#group="matButtonToggleGroup"
+				[value]="selectedMode"
+				(change)="switch(group.value)"
+			>
+				<mat-button-toggle value="list" aria-label="Listenansicht">
+					Liste <mat-icon>list</mat-icon>
+				</mat-button-toggle>
+				<mat-button-toggle value="map" aria-label="Kartenansicht">
+					Karte<mat-icon>pin_drop</mat-icon>
+				</mat-button-toggle>
+			</mat-button-toggle-group>
+		</mat-toolbar-row>
+	</mat-toolbar>
+	<exhibitor-filter></exhibitor-filter>
+	<ng-content></ng-content>
+</div>
