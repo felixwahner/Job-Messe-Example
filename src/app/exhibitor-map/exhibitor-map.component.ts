@@ -9,10 +9,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { Exhibitor } from '../shared/models/exhibitor';
-import { FavoritesService } from '../shared/services/favorites.service';
 import * as L from 'leaflet';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
-import { Location, LocationStrategy } from '@angular/common';
+import { Location } from '@angular/common';
 
 @Component({
 	selector: 'exhibitor-map',

@@ -18,11 +18,17 @@ export class ExhibitorsService {
 		this.getJson()
 			.pipe(take(1))
 			.subscribe((data) => {
-				this.exhibitorsSrc.next(data);
+				this.exhibitorsSrc.next(
+					data.map((exhibitor) => {
+						exhibitor.logoUrl = this.location.prepareExternalUrl(
+							exhibitor.logoUrl
+						);
+						return exhibitor;
+					})
+				);
 				this.allFiltersSrc.next(this.getAllFilters());
 			});
 	}
-
 	private allFiltersSrc: BehaviorSubject<Array<string>> = new BehaviorSubject(
 		[] as Array<string>
 	);
