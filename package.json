@@ -6,7 +6,7 @@
     "start": "ng serve --disable-host-check",
     "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
-    "deploy": "ng build --configuration production --output-path=dist/Job-Messe-Example --base-href=/Job-Messe-Example/",
+    "deploy": "ng build --configuration production --output-path=dist/angular-ci-cd --base-href=/Job-Messe-Example/",
     "test": "ng test"
   },
   "private": true,
