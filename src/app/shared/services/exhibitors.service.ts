@@ -4,13 +4,16 @@ import { HttpClient } from '@angular/common/http';
 import { FavoritesService } from './favorites.service';
 import { Exhibitor } from '../models/exhibitor';
 import { filter, map, take } from 'rxjs/operators';
+import { Location } from '@angular/common';
+
 @Injectable({
 	providedIn: 'root',
 })
 export class ExhibitorsService {
 	constructor(
 		private http: HttpClient,
-		private favoritesService: FavoritesService
+		private favoritesService: FavoritesService,
+		private location: Location
 	) {
 		this.getJson()
 			.pipe(take(1))
@@ -63,7 +66,10 @@ export class ExhibitorsService {
 	}
 
 	private getJson(): Observable<Array<Exhibitor>> {
-		return this.http.get<Array<Exhibitor>>('/assets/data/exhibitors.json');
+		const url = this.location.prepareExternalUrl(
+			'assets/data/exhibitors.json'
+		);
+		return this.http.get<Array<Exhibitor>>(url);
 	}
 	public get(): Observable<Array<Exhibitor>> {
 		return combineLatest(

@@ -11,8 +11,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { Exhibitor } from '../shared/models/exhibitor';
 import { FavoritesService } from '../shared/services/favorites.service';
 import * as L from 'leaflet';
-
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { Location, LocationStrategy } from '@angular/common';
 
 @Component({
 	selector: 'exhibitor-map',
@@ -21,7 +21,7 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 	imports: [MatCardModule, MatButtonModule, MatIconModule, LeafletModule],
 })
 export class ExhibitorMapComponent implements OnChanges {
-	constructor(private favoritesService: FavoritesService) {}
+	constructor(private location: Location) {}
 	public isMapReady: boolean = false;
 	public map: L.Map | null = null;
 	public markers: Map<string, L.Marker> = new Map();
@@ -50,10 +50,10 @@ export class ExhibitorMapComponent implements OnChanges {
 		const topLeft = L.latLng(0, 0);
 		const bottomRight = L.latLng(10000, 10000);
 		const bounds = L.latLngBounds(topLeft, bottomRight);
-		var image = L.imageOverlay(
-			'/assets/images/backgrounds/example.png',
-			bounds
-		).addTo(this.map as L.Map);
+		const url = this.location.prepareExternalUrl(
+			'assets/images/backgrounds/example.png'
+		);
+		var image = L.imageOverlay(url, bounds).addTo(this.map as L.Map);
 		this.map.fitBounds(bounds);
 		this.removeMarkersFromMap();
 		this.addMarkersToMap();
