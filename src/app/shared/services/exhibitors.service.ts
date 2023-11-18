@@ -46,8 +46,8 @@ export class ExhibitorsService {
 		this.exhibitorsSrc.asObservable();
 
 	// @TODO: Possibly allow multiple filters to be active at the same time.
-	public addFilter(type: string) {
-		this.activeFiltersSrc.next([type]);
+	public addFilter(types: Array<string>) {
+		this.activeFiltersSrc.next(types);
 	}
 	public removeFilter(type: string) {
 		this.activeFiltersSrc.next([

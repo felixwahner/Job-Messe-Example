@@ -1,7 +1,10 @@
-<div
-	class="map"
-	style="height: calc(100vh - 140px)"
-	leaflet
-	[leafletOptions]="leafletOptions"
-	(leafletMapReady)="onMapReady($event)"
-></div>
+<app-header title="Karte der Jobmesse"></app-header>
+<ion-content>
+	<div
+		style="height: 100%"
+		class="map"
+		leaflet
+		[leafletOptions]="leafletOptions"
+		(leafletMapReady)="onMapReady($event)"
+	></div>
+</ion-content>

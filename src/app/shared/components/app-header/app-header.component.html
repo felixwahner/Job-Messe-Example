@@ -1,0 +1,23 @@
+<ion-header>
+	<ion-toolbar>
+		<ion-title>
+			<ion-icon name="school-outline"></ion-icon>
+			<span class="first">Job</span
+			><span class="second">Finder</span></ion-title
+		>
+	</ion-toolbar>
+	<ion-toolbar class="center">
+		<ion-select
+			aria-label="Fruit"
+			[multiple]="true"
+			(ionChange)="handleChange($event)"
+		>
+			<div slot="label">Ausbildungsberufe filtern:</div>
+			@for(jobType of jobTypes; track jobType) {
+			<ion-select-option [value]="jobType">{{
+				jobType
+			}}</ion-select-option>
+			}
+		</ion-select>
+	</ion-toolbar>
+</ion-header>

@@ -1,29 +1,24 @@
-.example-card {
-  max-width: 95%;
-  height: 95%;
+ion-img {
+  max-width: 24px;
+  height: auto;
 }
-
-.responsive {
-  width: 100% !important;
-  height: auto !important;
-  max-width: 400px;
-  margin: 0 auto;
+.toggle {
+  display: flex;
+  margin: 20px;
 }
-.mat-mdc-card-header {
-  width: 100%;
+ion-toggle {
+  
+margin-left: auto;
 }
-.mat-mdc-card-header-text {
-  width: 100% !important;
-}
-mat-card-title {
-  text-align: left;
-}
-
-.mat-expansion-panel-header-description {
-  justify-content: space-between;
-  align-items: center;
-}
-
-mat-form-field {
-  margin-right: 12px;
+ion-text {
+  text-align: center;
+  background: #fff !important;
+  margin: 20px;
+  padding: 20px;
+  text-align: center;;
+  display: flex;
+  flex-direction: column;
+  ion-icon {
+    margin: 10px auto;
+  }
 }

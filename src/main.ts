@@ -1,7 +1,31 @@
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { bootstrapApplication } from '@angular/platform-browser';
+import {
+	RouteReuseStrategy,
+	PreloadAllModules,
+	provideRouter,
+	withHashLocation,
+	withPreloading,
+} from '@angular/router';
+import {
+	provideIonicAngular,
+	IonicRouteStrategy,
+} from '@ionic/angular/standalone';
+import { provideHttpClient } from '@angular/common/http';
 
-import { AppModule } from './app/app.module';
+import { APP_ROUTES } from './app/app.routes';
+import { AppComponent } from './app/app.component';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
-platformBrowserDynamic()
-  .bootstrapModule(AppModule)
-  .catch((err) => console.error(err));
+bootstrapApplication(AppComponent, {
+	providers: [
+		{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+		provideIonicAngular({ mode: 'md' }),
+		provideAnimations(),
+		provideHttpClient(),
+		provideRouter(
+			APP_ROUTES,
+			withPreloading(PreloadAllModules)
+			// withHashLocation() // needed for gitlab pages :(
+		),
+	],
+});

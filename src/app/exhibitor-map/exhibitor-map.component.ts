@@ -1,31 +1,32 @@
-import {
-	Component,
-	Input,
-	OnChanges,
-	OnInit,
-	SimpleChanges,
-} from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
+import { Component, OnInit } from '@angular/core';
 import { Exhibitor } from '../shared/models/exhibitor';
 import * as L from 'leaflet';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { Location } from '@angular/common';
+import { ExhibitorsService } from '../shared/services/exhibitors.service';
+import { Observable } from 'rxjs';
+import { IonContent } from '@ionic/angular/standalone';
+import { AppHeaderComponent } from '../shared/components/app-header/app-header.component';
 
 @Component({
 	selector: 'exhibitor-map',
 	templateUrl: './exhibitor-map.component.html',
 	standalone: true,
-	imports: [MatCardModule, MatButtonModule, MatIconModule, LeafletModule],
+	imports: [LeafletModule, IonContent, AppHeaderComponent],
 })
-export class ExhibitorMapComponent implements OnChanges {
-	constructor(private location: Location) {}
+export class ExhibitorMapComponent implements OnInit {
+	constructor(
+		private location: Location,
+		private exhibitorsService: ExhibitorsService
+	) {}
 	public isMapReady: boolean = false;
 	public map: L.Map | null = null;
 	public markers: Map<string, L.Marker> = new Map();
 
-	@Input() public exhibitors: Array<Exhibitor> | null = null;
+	public exhibitors$: Observable<Array<Exhibitor>> =
+		this.exhibitorsService.get();
+
+	public exhibitors: Array<Exhibitor> = [];
 
 	public leafletOptions = {
 		minZoom: -5,
@@ -33,15 +34,10 @@ export class ExhibitorMapComponent implements OnChanges {
 		crs: L.CRS.Simple,
 	};
 
-	public ngOnChanges({ exhibitors }: SimpleChanges): void {
-		if (
-			exhibitors &&
-			exhibitors.currentValue &&
-			exhibitors.currentValue.length > 0
-		) {
-			this.removeMarkersFromMap();
-			this.addMarkersToMap();
-		}
+	public ngOnInit(): void {
+		this.exhibitors$.subscribe(
+			(exhibitors) => (this.exhibitors = exhibitors)
+		);
 	}
 	public onMapReady(map: L.Map): void {
 		this.isMapReady = true;
@@ -52,7 +48,7 @@ export class ExhibitorMapComponent implements OnChanges {
 		const url = this.location.prepareExternalUrl(
 			'assets/images/backgrounds/example.png'
 		);
-		var image = L.imageOverlay(url, bounds).addTo(this.map as L.Map);
+		L.imageOverlay(url, bounds).addTo(this.map as L.Map);
 		this.map.fitBounds(bounds);
 		this.removeMarkersFromMap();
 		this.addMarkersToMap();

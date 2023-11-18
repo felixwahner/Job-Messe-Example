@@ -1,38 +1,44 @@
-<h2>Diese Unternehmen sind auf der Jobmesse zu finden:</h2>
-<div class="grid-container">
-	<mat-accordion>
-		@for (exhibitor of exhibitors; track exhibitor.id) {
-		<mat-expansion-panel>
-			<mat-expansion-panel-header>
-				<mat-panel-title>
-					{{ exhibitor.name }}
-				</mat-panel-title>
-				<mat-panel-description>
-					{{ exhibitor.jobTypes.join(", ") }}
-					<mat-icon
-						[color]="exhibitor.isFavorite ? 'warn' : 'default'"
-						>favorite</mat-icon
-					>
-				</mat-panel-description>
-			</mat-expansion-panel-header>
-			<img
-				class="responsive"
-				mat-card-image
+<app-header title="Liste der Aussteller"></app-header>
+<ion-content color="light">
+	<div class="toggle">
+		<ion-toggle color="danger" (ionChange)="handleChange($event)"
+			>Nur Favoriten anzeigen</ion-toggle
+		>
+	</div>
+	@if(exhibitors.length) {
+	<ion-list color="light" [inset]="true" lines="none"
+		>@for (exhibitor of exhibitors; track exhibitor.id) {
+		<ion-item>
+			<ion-img
+				slot="start"
 				[src]="exhibitor.logoUrl"
 				[alt]="'Logo von ' + exhibitor.name"
-			/>
-			<p>
-				{{ exhibitor.text }}
-			</p>
-			<button
+			></ion-img>
+			<ion-label slot="start">
+				<strong>
+					{{ exhibitor.name }}
+				</strong>
+				<p>{{ exhibitor.jobTypes.join(", ") }}</p>
+			</ion-label>
+			<ion-button
+				fill="clear"
+				slot="end"
+				color="danger"
+				size="large"
 				(click)="toggleFavorite(exhibitor)"
-				mat-stroked-button
-				[color]="exhibitor.isFavorite ? 'warn' : 'default'"
-				aria-label="Favorisieren"
 			>
-				Favorit<mat-icon>favorite</mat-icon>
-			</button>
-		</mat-expansion-panel>
-		}
-	</mat-accordion>
-</div>
+				<ion-icon
+					[name]="exhibitor.isFavorite ? 'heart' : 'heart-outline'"
+				></ion-icon>
+			</ion-button>
+		</ion-item>
+
+		}</ion-list
+	>
+	} @else { @if( isFavoriteFilterActive | async) {
+	<ion-text>
+		<ion-icon size="large" name="heart-outline"></ion-icon>
+		<h2>Es wurden bisher keine Favoriten angelegt.</h2>
+	</ion-text>
+	} }
+</ion-content>
