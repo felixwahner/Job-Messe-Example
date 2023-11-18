@@ -18,3 +18,12 @@ All exhibitor data is stored in a json file `assets/data/exhibitors.json`. The l
 
 The app is a small side project and not planned to be developed further once the fair has finished. Feel free to fork the
 project if you plan to use it for your own purposes.
+
+## Demo
+
+A current snapshot of the application is automatically deployed to gitlab pages. You can try it here:  
+[https://felixwahner.github.io/Job-Messe-Example/](https://felixwahner.github.io/Job-Messe-Example/).
+
+## License
+
+The application is licensed under the MIT (aka do whatever you like with it).

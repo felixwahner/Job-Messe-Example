@@ -24,8 +24,8 @@ bootstrapApplication(AppComponent, {
 		provideHttpClient(),
 		provideRouter(
 			APP_ROUTES,
-			withPreloading(PreloadAllModules),
-			withHashLocation() // needed for gitlab pages :(
+			withPreloading(PreloadAllModules)
+			//withHashLocation() // needed for gitlab pages :(
 		),
 	],
 });
