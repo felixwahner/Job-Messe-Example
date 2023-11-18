@@ -1,5 +1,5 @@
+import { Exhibitor } from './../shared/models/exhibitor';
 import { Component, OnInit } from '@angular/core';
-import { Exhibitor } from '../shared/models/exhibitor';
 import { FavoritesService } from '../shared/services/favorites.service';
 import { ExhibitorsService } from '../shared/services/exhibitors.service';
 import { Observable, filter, map, switchMap } from 'rxjs';
@@ -18,12 +18,14 @@ import {
 	IonButton,
 	IonToggle,
 	IonText,
+	IonModal,
+	ModalController,
 } from '@ionic/angular/standalone';
 import { AppHeaderComponent } from '../shared/components/app-header/app-header.component';
-
 import { addIcons } from 'ionicons';
 import { heartOutline, listOutline, heart, bugOutline } from 'ionicons/icons';
 import { CommonModule } from '@angular/common';
+import { ExhibitorDetailsComponent } from './exhibitor-details/exhibitor-details.component';
 
 @Component({
 	selector: 'exhibitor-list',
@@ -52,7 +54,8 @@ import { CommonModule } from '@angular/common';
 export class ExhibitorListComponent implements OnInit {
 	constructor(
 		private favoritesService: FavoritesService,
-		private exhibitorsService: ExhibitorsService
+		private exhibitorsService: ExhibitorsService,
+		private modalCtrl: ModalController
 	) {
 		addIcons({
 			'heart-outline': heartOutline,
@@ -90,11 +93,21 @@ export class ExhibitorListComponent implements OnInit {
 			this.favoritesService.addFavorite(exhibitor.id);
 		}
 	}
-	public handleChange($event: any): void {
+	public handleOnlyFavorites($event: any): void {
 		if ($event.detail.checked) {
 			this.exhibitorsService.addFilter(['favorites']);
 		} else {
 			this.exhibitorsService.removeFilter('favorites');
 		}
+	}
+
+	async openModal(exhibitor: Exhibitor) {
+		const modal = await this.modalCtrl.create({
+			component: ExhibitorDetailsComponent,
+			componentProps: {
+				exhibitor: exhibitor,
+			},
+		});
+		modal.present();
 	}
 }

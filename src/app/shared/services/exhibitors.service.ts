@@ -92,7 +92,7 @@ export class ExhibitorsService {
 					)
 					.filter((exhibitor) => {
 						if (!filters.length) return exhibitor;
-						return filters.every((filter) => {
+						return filters.some((filter) => {
 							if (filter === 'favorites')
 								return exhibitor.isFavorite;
 							return exhibitor.jobTypes.includes(filter);

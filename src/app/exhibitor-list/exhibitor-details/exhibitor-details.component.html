@@ -1,0 +1,22 @@
+<ion-header>
+	<ion-toolbar>
+		<ion-title>Details zu {{ exhibitor?.name }}</ion-title>
+		<ion-buttons slot="end">
+			<ion-button (click)="cancel()">
+				<ion-icon name="close-circle-outline"></ion-icon
+			></ion-button>
+		</ion-buttons>
+	</ion-toolbar>
+</ion-header>
+<ion-content color="light" class="ion-content-padding">
+	<div class="inner">
+		<img alt="Silhouette of mountains" [src]="exhibitor?.logoUrl" />
+		<ion-text>
+			<h3>
+				Angebotene Jobs:
+				<strong>{{ exhibitor?.jobTypes?.join(", ") }}</strong>
+			</h3>
+			<p>{{ exhibitor?.text }}</p>
+		</ion-text>
+	</div>
+</ion-content>

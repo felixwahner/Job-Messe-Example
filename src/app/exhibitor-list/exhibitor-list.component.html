@@ -1,14 +1,14 @@
 <app-header title="Liste der Aussteller"></app-header>
 <ion-content color="light">
 	<div class="toggle">
-		<ion-toggle color="danger" (ionChange)="handleChange($event)"
+		<ion-toggle color="danger" (ionChange)="handleOnlyFavorites($event)"
 			>Nur Favoriten anzeigen</ion-toggle
 		>
 	</div>
 	@if(exhibitors.length) {
 	<ion-list color="light" [inset]="true" lines="none"
 		>@for (exhibitor of exhibitors; track exhibitor.id) {
-		<ion-item>
+		<ion-item [button]="true" (click)="openModal(exhibitor)">
 			<ion-img
 				slot="start"
 				[src]="exhibitor.logoUrl"
@@ -25,7 +25,11 @@
 				slot="end"
 				color="danger"
 				size="large"
-				(click)="toggleFavorite(exhibitor)"
+				(click)="
+					toggleFavorite(exhibitor);
+					$event.preventDefault();
+					$event.stopPropagation()
+				"
 			>
 				<ion-icon
 					[name]="exhibitor.isFavorite ? 'heart' : 'heart-outline'"
@@ -38,7 +42,7 @@
 	} @else { @if( isFavoriteFilterActive | async) {
 	<ion-text>
 		<ion-icon size="large" name="heart-outline"></ion-icon>
-		<h2>Es wurden bisher keine Favoriten angelegt.</h2>
+		<p>Es wurden bisher keine Favoriten angelegt.</p>
 	</ion-text>
 	} }
 </ion-content>
