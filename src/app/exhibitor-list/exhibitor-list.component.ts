@@ -1,8 +1,7 @@
 import { Exhibitor } from './../shared/models/exhibitor';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Signal } from '@angular/core';
 import { FavoritesService } from '../shared/services/favorites.service';
 import { ExhibitorsService } from '../shared/services/exhibitors.service';
-import { Observable, filter, map, switchMap } from 'rxjs';
 import {
 	IonContent,
 	IonItem,
@@ -49,6 +48,7 @@ import { ExhibitorDetailsComponent } from './exhibitor-details/exhibitor-details
 		IonToggle,
 		IonText,
 		CommonModule,
+		ExhibitorDetailsComponent,
 	],
 })
 export class ExhibitorListComponent implements OnInit {
@@ -65,26 +65,12 @@ export class ExhibitorListComponent implements OnInit {
 		});
 	}
 
-	public exhibitors$: Observable<Array<Exhibitor>> =
-		this.exhibitorsService.get();
+	public exhibitors: Signal<Array<Exhibitor>> = this.exhibitorsService.get;
 
-	public exhibitors: Array<Exhibitor> = [];
+	public isFavoriteFilterActive: Signal<Array<string>> =
+		this.exhibitorsService.activeFilters;
 
-	public isFavoriteFilterActive: Observable<boolean> =
-		this.exhibitorsService.activeFilters$.pipe(
-			map(
-				(filterNames) =>
-					!!filterNames.filter(
-						(filterName) => filterName === 'favorites'
-					)
-			)
-		);
-
-	public ngOnInit(): void {
-		this.exhibitors$.subscribe(
-			(exhibitors) => (this.exhibitors = exhibitors)
-		);
-	}
+	public ngOnInit(): void {}
 
 	public toggleFavorite(exhibitor: Exhibitor) {
 		if (exhibitor.isFavorite) {

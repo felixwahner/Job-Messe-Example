@@ -1,9 +1,15 @@
-import { Injectable } from '@angular/core';
+import {
+	Injectable,
+	Signal,
+	WritableSignal,
+	computed,
+	signal,
+} from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { FavoritesService } from './favorites.service';
 import { Exhibitor } from '../models/exhibitor';
-import { filter, map, take } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { Location } from '@angular/common';
 
 @Injectable({
@@ -18,87 +24,59 @@ export class ExhibitorsService {
 		this.getJson()
 			.pipe(take(1))
 			.subscribe((data) => {
-				this.exhibitorsSrc.next(
+				this.exhibitors.set(
 					data.map((exhibitor) => {
-						exhibitor.logoUrl = this.location.prepareExternalUrl(
-							exhibitor.logoUrl
-						);
+						exhibitor.logoUrl = this.location
+							.prepareExternalUrl(exhibitor.logoUrl)
+							.replace('#', '');
 						return exhibitor;
 					})
 				);
-				this.allFiltersSrc.next(this.getAllFilters());
 			});
 	}
-	private allFiltersSrc: BehaviorSubject<Array<string>> = new BehaviorSubject(
-		[] as Array<string>
+
+	private exhibitors: WritableSignal<Array<Exhibitor>> = signal([]);
+	public activeFilters: WritableSignal<Array<string>> = signal([]);
+	public allFilters: Signal<Array<string>> = computed(() =>
+		this.exhibitors().reduce((accumulator, currentValue) => {
+			const newFilters = currentValue.jobTypes.filter((jobType) => {
+				return accumulator.includes(jobType) === false;
+			});
+			return [...accumulator, ...newFilters];
+		}, [] as Array<string>)
 	);
-	public allFilters$: Observable<Array<string>> =
-		this.allFiltersSrc.asObservable();
+	public get: Signal<Array<Exhibitor>> = computed(() => {
+		return this.exhibitors()
+			.map((exhibitor) =>
+				this.favoritesService.favorites().includes(exhibitor.id)
+					? { ...exhibitor, isFavorite: true }
+					: exhibitor
+			)
+			.filter((exhibitor) => {
+				if (!this.activeFilters().length) return exhibitor;
+				return this.activeFilters().some((filter) => {
+					if (filter === 'favorites') return exhibitor.isFavorite;
+					return exhibitor.jobTypes.includes(filter);
+				});
+			});
+	});
 
-	private activeFiltersSrc: BehaviorSubject<Array<string>> =
-		new BehaviorSubject([] as Array<string>);
-	public activeFilters$: Observable<Array<string>> =
-		this.activeFiltersSrc.asObservable();
-
-	private exhibitorsSrc: BehaviorSubject<Array<Exhibitor>> =
-		new BehaviorSubject([] as Array<Exhibitor>);
-	public exhibitors$: Observable<Array<Exhibitor>> =
-		this.exhibitorsSrc.asObservable();
-
-	// @TODO: Possibly allow multiple filters to be active at the same time.
 	public addFilter(types: Array<string>) {
-		this.activeFiltersSrc.next(types);
+		this.activeFilters.set([...types]);
 	}
 	public removeFilter(type: string) {
-		this.activeFiltersSrc.next([
-			...this.activeFiltersSrc
-				.getValue()
-				.filter((value) => value !== type),
+		this.activeFilters.update((value) => [
+			...value.filter((value) => value !== type),
 		]);
 	}
 	public removeAllFilters() {
-		this.activeFiltersSrc.next([]);
-	}
-
-	public getAllFilters() {
-		return this.exhibitorsSrc
-			.getValue()
-			.reduce((accumulator, currentValue) => {
-				const newFilters = currentValue.jobTypes.filter((jobType) => {
-					return accumulator.includes(jobType) === false;
-				});
-				return [...accumulator, ...newFilters];
-			}, [] as Array<string>);
+		this.activeFilters.set([]);
 	}
 
 	private getJson(): Observable<Array<Exhibitor>> {
-		const url = this.location.prepareExternalUrl(
-			'assets/data/exhibitors.json'
-		);
+		const url = this.location
+			.prepareExternalUrl('assets/data/exhibitors.json')
+			.replace('#', '');
 		return this.http.get<Array<Exhibitor>>(url);
-	}
-	public get(): Observable<Array<Exhibitor>> {
-		return combineLatest(
-			this.exhibitors$,
-			this.favoritesService.currentFavorites$,
-			this.activeFilters$
-		).pipe(
-			map(([exhibitors, favorites, filters]) =>
-				exhibitors
-					.map((exhibitor) =>
-						(favorites as Array<string>).includes(exhibitor.id)
-							? { ...exhibitor, isFavorite: true }
-							: exhibitor
-					)
-					.filter((exhibitor) => {
-						if (!filters.length) return exhibitor;
-						return filters.some((filter) => {
-							if (filter === 'favorites')
-								return exhibitor.isFavorite;
-							return exhibitor.jobTypes.includes(filter);
-						});
-					})
-			)
-		);
 	}
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, WritableSignal, signal, effect } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ToastController } from '@ionic/angular/standalone';
 const storageName: string = 'FAVORITES';
@@ -6,26 +6,21 @@ const storageName: string = 'FAVORITES';
 	providedIn: 'root',
 })
 export class FavoritesService {
-	private currentFavoritesSrc: BehaviorSubject<Array<string>> =
-		new BehaviorSubject<Array<string>>([]);
-	public currentFavorites$: Observable<Array<string>> =
-		this.currentFavoritesSrc.asObservable();
 	constructor(private toastController: ToastController) {
-		this.currentFavoritesSrc.next(this.getFavorites());
+		this.favorites.set(this.getFavoritesFromLocalstorage());
+		effect(() => {
+			localStorage.setItem(storageName, this.favorites().join(','));
+		});
 	}
-	private getFavorites(): Array<string> {
+	public favorites: WritableSignal<Array<string>> = signal([]);
+
+	private getFavoritesFromLocalstorage(): Array<string> {
 		const storedItems = localStorage.getItem(storageName);
 		return storedItems ? storedItems.split(',') : [];
 	}
-	private store(items: Array<string>): void {
-		localStorage.setItem(storageName, items.join(','));
-	}
 	public async addFavorite(id: string): Promise<void> {
-		const currentFavorites = [...this.currentFavoritesSrc.getValue()];
-		if (currentFavorites.includes(id)) return;
-		currentFavorites.push(id);
-		this.store(currentFavorites);
-		this.currentFavoritesSrc.next(currentFavorites);
+		if (this.favorites().includes(id)) return;
+		this.favorites.update((value) => [...value, id]);
 		const toast = await this.toastController.create({
 			message: 'Favorit hinzugefügt',
 			duration: 1500,
@@ -35,12 +30,11 @@ export class FavoritesService {
 		await toast.present();
 	}
 	public async removeFavorite(id: string): Promise<void> {
-		const currentFavorites = [...this.currentFavoritesSrc.getValue()];
-		const favoritePosition = currentFavorites.indexOf(id);
+		const favoritePosition = this.favorites().indexOf(id);
 		if (favoritePosition < 0) return;
-		currentFavorites.splice(favoritePosition, 1);
-		this.store(currentFavorites);
-		this.currentFavoritesSrc.next(currentFavorites);
+		this.favorites.update((favorites) =>
+			favorites.filter((valItem) => valItem !== id)
+		);
 		const toast = await this.toastController.create({
 			message: 'Favorit gelöscht',
 			duration: 1500,

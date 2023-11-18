@@ -13,7 +13,7 @@
 			(ionChange)="handleChange($event)"
 		>
 			<div slot="label">Ausbildungsberufe filtern:</div>
-			@for(jobType of jobTypes; track jobType) {
+			@for(jobType of jobTypes(); track jobType) {
 			<ion-select-option [value]="jobType">{{
 				jobType
 			}}</ion-select-option>

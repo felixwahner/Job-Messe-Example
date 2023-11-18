@@ -5,9 +5,9 @@
 			>Nur Favoriten anzeigen</ion-toggle
 		>
 	</div>
-	@if(exhibitors.length) {
+	@if(exhibitors().length) {
 	<ion-list color="light" [inset]="true" lines="none"
-		>@for (exhibitor of exhibitors; track exhibitor.id) {
+		>@for (exhibitor of exhibitors(); track exhibitor.id) {
 		<ion-item [button]="true" (click)="openModal(exhibitor)">
 			<ion-img
 				slot="start"
@@ -39,7 +39,7 @@
 
 		}</ion-list
 	>
-	} @else { @if( isFavoriteFilterActive | async) {
+	} @else { @if( isFavoriteFilterActive().includes('favorites')) {
 	<ion-text>
 		<ion-icon size="large" name="heart-outline"></ion-icon>
 		<p>Es wurden bisher keine Favoriten angelegt.</p>

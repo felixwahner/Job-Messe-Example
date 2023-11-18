@@ -3,6 +3,7 @@ import {
 	Component,
 	EnvironmentInjector,
 	OnInit,
+	Signal,
 } from '@angular/core';
 import { ExhibitorsService } from './shared/services/exhibitors.service';
 import { Observable } from 'rxjs';
@@ -44,12 +45,8 @@ import { mapOutline, listOutline } from 'ionicons/icons';
 	],
 })
 export class AppComponent implements OnInit {
-	public exhibitors$: Observable<Array<Exhibitor>>;
-	constructor(
-		private exhibitorsService: ExhibitorsService,
-		public environmentInjector: EnvironmentInjector
-	) {
-		this.exhibitors$ = this.exhibitorsService.get();
+	public exhibitors: Signal<Array<Exhibitor>> = this.exhibitorsService.get;
+	constructor(private exhibitorsService: ExhibitorsService) {
 		addIcons({ 'map-outline': mapOutline, 'list-outline': listOutline });
 	}
 	public ngOnInit(): void {}

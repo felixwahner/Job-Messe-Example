@@ -23,10 +23,7 @@ export class ExhibitorMapComponent implements OnInit {
 	public map: L.Map | null = null;
 	public markers: Map<string, L.Marker> = new Map();
 
-	public exhibitors$: Observable<Array<Exhibitor>> =
-		this.exhibitorsService.get();
-
-	public exhibitors: Array<Exhibitor> = [];
+	public exhibitors: Array<Exhibitor> = this.exhibitorsService.get();
 
 	public leafletOptions = {
 		minZoom: -5,
@@ -34,20 +31,16 @@ export class ExhibitorMapComponent implements OnInit {
 		crs: L.CRS.Simple,
 	};
 
-	public ngOnInit(): void {
-		this.exhibitors$.subscribe(
-			(exhibitors) => (this.exhibitors = exhibitors)
-		);
-	}
+	public ngOnInit(): void {}
 	public onMapReady(map: L.Map): void {
 		this.isMapReady = true;
 		this.map = map;
 		const topLeft = L.latLng(0, 0);
 		const bottomRight = L.latLng(10000, 10000);
 		const bounds = L.latLngBounds(topLeft, bottomRight);
-		const url = this.location.prepareExternalUrl(
-			'assets/images/backgrounds/example.png'
-		);
+		const url = this.location
+			.prepareExternalUrl('assets/images/backgrounds/example.png')
+			.replace('#', '');
 		L.imageOverlay(url, bounds).addTo(this.map as L.Map);
 		this.map.fitBounds(bounds);
 		this.removeMarkersFromMap();

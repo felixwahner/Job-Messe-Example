@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, Signal } from '@angular/core';
 import {
 	IonContent,
 	IonItem,
@@ -43,7 +43,7 @@ export class AppHeaderComponent {
 			'school-outline': schoolOutline,
 		});
 	}
-	public jobTypes: Array<string> = this.exhibitorsService.getAllFilters();
+	public jobTypes: Signal<Array<string>> = this.exhibitorsService.allFilters;
 	public handleChange($event: any): void {
 		this.exhibitorsService.addFilter($event.detail.value);
 	}
