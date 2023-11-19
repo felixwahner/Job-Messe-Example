@@ -6,6 +6,7 @@ import { Location } from '@angular/common';
 import { ExhibitorsService } from '../shared/services/exhibitors.service';
 import { IonContent } from '@ionic/angular/standalone';
 import { AppHeaderComponent } from '../shared/components/app-header/app-header.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
 	selector: 'exhibitor-map',
@@ -16,7 +17,8 @@ import { AppHeaderComponent } from '../shared/components/app-header/app-header.c
 export class ExhibitorMapComponent {
 	constructor(
 		private location: Location,
-		private exhibitorsService: ExhibitorsService
+		private exhibitorsService: ExhibitorsService,
+		private route: ActivatedRoute
 	) {
 		effect(() => {
 			if (this.exhibitorsService.get().length) {
@@ -24,9 +26,14 @@ export class ExhibitorMapComponent {
 			}
 		});
 	}
-	public isMapReady: boolean = false;
+	private isMapReady: boolean = false;
+	private currentMarkers: Map<string, L.Marker> = new Map();
+	private mapIcon = L.divIcon({
+		className: 'marker-icon',
+		iconSize: [30, 30],
+		iconAnchor: [15, 15],
+	});
 	public map: L.Map | null = null;
-	public currentMarkers: Map<string, L.Marker> = new Map();
 
 	public leafletOptions = {
 		minZoom: 1,
@@ -40,12 +47,12 @@ export class ExhibitorMapComponent {
 		this.isMapReady = true;
 		this.map = map;
 		/*
-		To get the correct scaling, we set the bounds
-		to the inital zoom level:
-		zoom 4 6456 * 5120 
-		zoom 3 3228 * 2560 (original size)
-		zoom 2 1614 * 1280
-		zoom 1 807 * 640
+			To get the correct scaling, we set the bounds
+			to the inital zoom level:
+			zoom 4 6456 * 5120 
+			zoom 3 3228 * 2560 (original size)
+			zoom 2 1614 * 1280
+			zoom 1 807 * 640
 		*/
 		const bounds: L.LatLngBounds = L.latLngBounds([
 			[0, 0],
@@ -62,6 +69,18 @@ export class ExhibitorMapComponent {
 			this.exhibitorsService.get().length
 		) {
 			this.handleDataUpdate();
+		}
+		const id = this.route.snapshot.params['id'];
+		if (id) {
+			const exhibitor = this.exhibitorsService
+				.get()
+				.find((exhibitor) => exhibitor.id === id);
+			if (exhibitor) {
+				this.map.panTo([
+					exhibitor.coordinates.latitude,
+					exhibitor.coordinates.longitude,
+				]);
+			}
 		}
 	}
 
@@ -88,23 +107,23 @@ export class ExhibitorMapComponent {
 			exhibitor.coordinates.latitude,
 			exhibitor.coordinates.longitude
 		);
-		const marker = L.marker(exhibitorPosition)
+		const marker = L.marker(exhibitorPosition, {
+			icon: this.mapIcon,
+		})
 			.setLatLng(exhibitorPosition)
 			.addTo(this.map as L.Map)
-			.bindPopup(
-				`<p>${exhibitor.name}<br/><small>${exhibitor.jobTypes.join(
-					','
-				)}</small></p>`,
-				{ autoClose: false, closeOnClick: false }
-			)
-			.openPopup();
+			.bindTooltip(exhibitor.name, {
+				permanent: true,
+				direction: 'right',
+			})
+			.openTooltip();
 		this.currentMarkers.set(exhibitor.id, marker);
 	}
 
 	private removeMarkerFromMap(exhibitorId: string): void {
 		const marker = this.currentMarkers.get(exhibitorId);
 		if (!marker) return;
-		marker.closePopup();
+		marker.closeTooltip();
 		if (this.map?.hasLayer(marker)) {
 			this.map?.removeLayer(marker);
 		}

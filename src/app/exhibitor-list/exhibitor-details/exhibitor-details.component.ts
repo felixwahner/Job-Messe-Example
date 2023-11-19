@@ -1,4 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Exhibitor } from './../../shared/models/exhibitor';
+import { ExhibitorsService } from './../../shared/services/exhibitors.service';
+import { FavoritesService } from './../../shared/services/favorites.service';
+import { Component, Input, Signal, effect } from '@angular/core';
+import { Router } from '@angular/router';
 import {
 	IonModal,
 	IonContent,
@@ -16,9 +20,13 @@ import {
 	IonIcon,
 	ModalController,
 } from '@ionic/angular/standalone';
-import { Exhibitor } from 'src/app/shared/models/exhibitor';
 import { addIcons } from 'ionicons';
-import { closeCircleOutline } from 'ionicons/icons';
+import {
+	closeCircleOutline,
+	heart,
+	heartOutline,
+	mapOutline,
+} from 'ionicons/icons';
 
 @Component({
 	selector: 'exhibitor-details',
@@ -43,13 +51,42 @@ import { closeCircleOutline } from 'ionicons/icons';
 	],
 })
 export class ExhibitorDetailsComponent {
-	constructor(private modalCtrl: ModalController) {
+	constructor(
+		private modalCtrl: ModalController,
+		private favoritesService: FavoritesService,
+		private exhibitorsService: ExhibitorsService,
+		private router: Router
+	) {
 		addIcons({
 			closeCircleOutline,
+			heart,
+			heartOutline,
+			mapOutline,
+		});
+		effect(() => {
+			if (this.exhibitorsService.get().length) {
+				this.exhibitor = this.exhibitorsService
+					.get()
+					.find((exhibitor) => exhibitor.id === this.exhibitorId);
+			}
 		});
 	}
-	@Input() public exhibitor: Exhibitor | null = null;
+	@Input() public exhibitorId: string = '';
+
+	public exhibitor: Exhibitor | undefined;
+
 	public cancel(): void {
+		this.modalCtrl.dismiss(null, 'cancel');
+	}
+	public toggleFavorite() {
+		if (this.exhibitor?.isFavorite) {
+			this.favoritesService.removeFavorite(this.exhibitor?.id);
+		} else {
+			this.favoritesService.addFavorite(this.exhibitor?.id as string);
+		}
+	}
+	public showOnMap() {
+		this.router.navigate(['map', this.exhibitor?.id]);
 		this.modalCtrl.dismiss(null, 'cancel');
 	}
 }

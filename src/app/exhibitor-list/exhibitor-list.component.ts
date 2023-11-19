@@ -91,7 +91,7 @@ export class ExhibitorListComponent implements OnInit {
 		const modal = await this.modalCtrl.create({
 			component: ExhibitorDetailsComponent,
 			componentProps: {
-				exhibitor: exhibitor,
+				exhibitorId: exhibitor.id,
 			},
 		});
 		modal.present();

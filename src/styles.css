@@ -100,3 +100,11 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 	--ion-color-light-tint: #f5f6f9;
 
 }
+
+.marker-icon {
+	position: relative;
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+	background: #eb445a;
+}

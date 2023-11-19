@@ -17,6 +17,25 @@
 				<strong>{{ exhibitor?.jobTypes?.join(", ") }}</strong>
 			</h3>
 			<p>{{ exhibitor?.text }}</p>
+			<ion-button
+				fill="outline"
+				color="danger"
+				(click)="toggleFavorite()"
+			>
+				<ion-icon
+					[name]="exhibitor?.isFavorite ? 'heart' : 'heart-outline'"
+				></ion-icon
+				>&nbsp;
+				{{
+					exhibitor?.isFavorite
+						? "Favoriten entfernen"
+						: "Favoriten hinzufügen"
+				}}
+			</ion-button>
+			<ion-button fill="outline" (click)="showOnMap()">
+				<ion-icon name="map-outline"></ion-icon>&nbsp; Auf der Karte
+				anzeigen</ion-button
+			>
 		</ion-text>
 	</div>
 </ion-content>

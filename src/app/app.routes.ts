@@ -18,7 +18,7 @@ export const APP_ROUTES: Routes = [
 					),
 			},
 			{
-				path: 'map',
+				path: 'map/:id',
 				loadComponent: () =>
 					import('./exhibitor-map/exhibitor-map.component').then(
 						(m) => m.ExhibitorMapComponent
