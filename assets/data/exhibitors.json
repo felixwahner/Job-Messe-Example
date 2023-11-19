@@ -3,8 +3,8 @@
     "id": "1",
     "name": "Üstra",
     "coordinates": {
-      "latitude": 1000,
-      "longitude": 1000,
+      "latitude": 300,
+      "longitude": 380,
       "z": 0
     },
     "jobTypes": ["Kaufmann", "Stadbahnfahrer", "Programmierer"],
@@ -16,8 +16,8 @@
     "id": "2",
     "name": "Wertgarantie",
     "coordinates": {
-      "latitude": 3000,
-      "longitude": 3000,
+      "latitude": 200,
+      "longitude": 400,
       "z": 0
     },
     "jobTypes": ["Kaufmann", "Programmierer"],
@@ -29,8 +29,8 @@
     "id": "3",
     "name": "Telekom",
     "coordinates": {
-      "latitude": 4500,
-      "longitude": 4500,
+      "latitude": 150,
+      "longitude": 500,
       "z": 0
     },
     "jobTypes": ["Techniker", "Elektriker"],
