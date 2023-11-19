@@ -18,11 +18,20 @@ export const APP_ROUTES: Routes = [
 					),
 			},
 			{
-				path: 'map/:id',
+				path: 'map',
 				loadComponent: () =>
 					import('./exhibitor-map/exhibitor-map.component').then(
 						(m) => m.ExhibitorMapComponent
 					),
+				children: [
+					{
+						path: ':id',
+						loadComponent: () =>
+							import(
+								'./exhibitor-map/exhibitor-map.component'
+							).then((m) => m.ExhibitorMapComponent),
+					},
+				],
 			},
 		],
 	},
