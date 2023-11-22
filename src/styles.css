@@ -100,11 +100,45 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 	--ion-color-light-tint: #f5f6f9;
 
 }
-
+/** 
+	map related styles (have to be global)
+*/
+.map {
+	height: 100%; 
+	width: 100%; 
+	position: relative
+}
+.leaflet-container {
+    background: #fff !important;
+}
 .marker-icon {
 	position: relative;
 	width: 30px;
 	height: 30px;
 	border-radius: 50%;
 	background: #eb445a;
+}
+.marker-icon-active:after {
+	content: '';
+	position: absolute;
+	width: 30px;
+	height: 30px;
+	left: 0;
+	top: 0;
+	border-radius: 50%;
+	animation-duration: 1.5s;
+	animation-name: pulse;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+	animation-direction: alternate;
+	opacity: .4;
+}
+
+@keyframes pulse {
+  from {
+    outline: 1px solid #eb445a;
+  }
+  to {
+    outline: 15px solid #eb445a;
+  }
 }

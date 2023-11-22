@@ -1,10 +1,11 @@
 <app-header title="Karte der Jobmesse"></app-header>
 <ion-content>
+	@if(this.exhibitorsService.get().length) {
 	<div
-		style="height: 100%"
 		class="map"
 		leaflet
 		[leafletOptions]="leafletOptions"
 		(leafletMapReady)="onMapReady($event)"
 	></div>
+	}
 </ion-content>

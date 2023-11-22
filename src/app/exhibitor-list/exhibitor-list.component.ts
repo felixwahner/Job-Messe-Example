@@ -17,7 +17,6 @@ import {
 	IonButton,
 	IonToggle,
 	IonText,
-	IonModal,
 	ModalController,
 } from '@ionic/angular/standalone';
 import { AppHeaderComponent } from '../shared/components/app-header/app-header.component';
@@ -64,6 +63,7 @@ export class ExhibitorListComponent implements OnInit {
 			'bug-outline': bugOutline,
 		});
 	}
+
 
 	public exhibitors: Signal<Array<Exhibitor>> = this.exhibitorsService.get;
 

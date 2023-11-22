@@ -7,7 +7,7 @@
       "longitude": 380,
       "z": 0
     },
-    "jobTypes": ["Kaufmann", "Stadbahnfahrer", "Programmierer"],
+    "jobTypes": ["Kaufmann/-frau für Groß- und Außenhandelsmanagement", "Kaufmann/-frau für Büromanagement", "Fachkraft für Lagerlogistik"],
     "isFavorite": false,
     "text": "Die Üstra betreibt die Stadtbahn Hannover sowie das Stadtbus­liniennetz in Hannover und umliegenden Städten und Gemeinden.",
     "logoUrl": "/assets/images/logos/Üstra_Hannoversche_Verkehrsbetriebe_2017_logo.svg"
@@ -20,7 +20,7 @@
       "longitude": 400,
       "z": 0
     },
-    "jobTypes": ["Kaufmann", "Programmierer"],
+    "jobTypes": ["Kaufmann/-frau im E-Commerce", "Kaufmann/-frau für Tourismus und Freizeit"],
     "isFavorite": false,
     "text": "Die Wertgarantie SE ist ein Spezialversicherer mit Hauptsitz in Hannover und ein Unternehmen der Wertgarantie Group.",
     "logoUrl": "/assets/images/logos/WERTGARANTIE_Logo.jpg"
@@ -33,7 +33,7 @@
       "longitude": 500,
       "z": 0
     },
-    "jobTypes": ["Techniker", "Elektriker"],
+    "jobTypes": ["Kaufmann/-frau im E-Commerce", "Kaufmann/-frau im Einzelhandel", "Gestalter/-in für visuelles Marketing", "Veranstaltungskaufmann/-frau"],
     "isFavorite": false,
     "text": "Die Deutsche Telekom AG ist die Dachgesellschaft von Europas größtem Tele­kommunikations­unternehmen[4][5] mit Hauptsitz in Bonn",
     "logoUrl": "/assets/images/logos/Deutsche_Telekom_2022.svg"

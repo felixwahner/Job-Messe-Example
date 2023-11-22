@@ -60,6 +60,7 @@ export class ExhibitorsService {
 				});
 			});
 	});
+	public selectedExhibitor: WritableSignal<Exhibitor | null> = signal(null);
 
 	public addFilter(types: Array<string>) {
 		this.activeFilters.set([...types]);

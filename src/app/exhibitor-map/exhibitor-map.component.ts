@@ -1,5 +1,5 @@
 import { Exhibitor } from './../shared/models/exhibitor';
-import { Component, effect } from '@angular/core';
+import { Component, OnDestroy, OnInit, effect } from '@angular/core';
 import * as L from 'leaflet';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { Location } from '@angular/common';
@@ -8,6 +8,16 @@ import { IonContent } from '@ionic/angular/standalone';
 import { AppHeaderComponent } from '../shared/components/app-header/app-header.component';
 import { ActivatedRoute } from '@angular/router';
 
+const mapIcon = L.divIcon({
+	className: 'marker-icon',
+	iconSize: [30, 30],
+	iconAnchor: [15, 15],
+});
+const activeMapIcon = L.divIcon({
+	className: 'marker-icon marker-icon-active',
+	iconSize: [30, 30],
+	iconAnchor: [15, 15],
+});
 @Component({
 	selector: 'exhibitor-map',
 	templateUrl: './exhibitor-map.component.html',
@@ -17,8 +27,7 @@ import { ActivatedRoute } from '@angular/router';
 export class ExhibitorMapComponent {
 	constructor(
 		private location: Location,
-		private exhibitorsService: ExhibitorsService,
-		private route: ActivatedRoute
+		public exhibitorsService: ExhibitorsService
 	) {
 		effect(() => {
 			if (this.exhibitorsService.get().length) {
@@ -28,20 +37,27 @@ export class ExhibitorMapComponent {
 	}
 	private isMapReady: boolean = false;
 	private currentMarkers: Map<string, L.Marker> = new Map();
-	private mapIcon = L.divIcon({
-		className: 'marker-icon',
-		iconSize: [30, 30],
-		iconAnchor: [15, 15],
-	});
 	public map: L.Map | null = null;
 
 	public leafletOptions = {
-		minZoom: 1,
-		maxZoom: 4,
-		center: L.latLng(0, 0),
+		minZoom: 0,
+		maxZoom: 3,
+		center: L.latLng(320, 403.5),
 		maxBoundsViscosity: 1,
 		crs: L.CRS.Simple,
 	};
+
+	public ionViewWillEnter(): void {
+		this.currentMarkers.forEach((marker, exhibitorId) => {
+			this.removeMarkerFromMap(exhibitorId);
+			marker.remove();
+		});
+		this.handleDataUpdate();
+	}
+
+	public ionViewDidLeave(): void {
+		this.exhibitorsService.selectedExhibitor.set(null);
+	}
 
 	public onMapReady(map: L.Map): void {
 		this.isMapReady = true;
@@ -53,13 +69,16 @@ export class ExhibitorMapComponent {
 			zoom 3 3228 * 2560 (original size)
 			zoom 2 1614 * 1280
 			zoom 1 807 * 640
+			zoom 0 403.5 * 320
 		*/
 		const bounds: L.LatLngBounds = L.latLngBounds([
 			[0, 0],
 			[640, 807], // image size
 		]);
-		this.map.setMaxBounds(new L.LatLngBounds([0, 0], [640, 807]));
-		this.map.fitBounds(bounds);
+		this.map
+			.setMaxBounds(new L.LatLngBounds([-20, -20], [660, 827]))
+			.setZoom(1)
+			.fitBounds(bounds);
 		const url: string = this.location
 			.prepareExternalUrl('assets/images/backgrounds/eg.png')
 			.replace('#', '');
@@ -70,11 +89,11 @@ export class ExhibitorMapComponent {
 		) {
 			this.handleDataUpdate();
 		}
-		const id = this.route.snapshot.params['id'];
-		if (id) {
+		const selectedExhibitor = this.exhibitorsService.selectedExhibitor();
+		if (selectedExhibitor) {
 			const exhibitor = this.exhibitorsService
 				.get()
-				.find((exhibitor) => exhibitor.id === id);
+				.find((exhibitor) => exhibitor.id === selectedExhibitor.id);
 			if (exhibitor) {
 				this.map.panTo([
 					exhibitor.coordinates.latitude,
@@ -107,8 +126,13 @@ export class ExhibitorMapComponent {
 			exhibitor.coordinates.latitude,
 			exhibitor.coordinates.longitude
 		);
+		const selectedExhibitor = this.exhibitorsService.selectedExhibitor();
+		console.log('SELECTED ---->', selectedExhibitor);
 		const marker = L.marker(exhibitorPosition, {
-			icon: this.mapIcon,
+			icon:
+				selectedExhibitor && selectedExhibitor.id === exhibitor.id
+					? activeMapIcon
+					: mapIcon,
 		})
 			.setLatLng(exhibitorPosition)
 			.addTo(this.map as L.Map)

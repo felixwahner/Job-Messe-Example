@@ -30,7 +30,6 @@ import { defineCustomElement as defineToast } from '@ionic/core/components/ion-t
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
-	styleUrls: ['./app.component.css'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	standalone: true,
 	imports: [

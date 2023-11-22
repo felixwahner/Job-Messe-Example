@@ -12,10 +12,14 @@
 	<div class="inner">
 		<img alt="Silhouette of mountains" [src]="exhibitor?.logoUrl" />
 		<ion-text>
-			<h3>
-				Angebotene Jobs:
-				<strong>{{ exhibitor?.jobTypes?.join(", ") }}</strong>
-			</h3>
+			<h3>Angebotene Jobs</h3>
+			<ul>
+				@for(job of exhibitor?.jobTypes; track job) {
+				<li>{{ job }}</li>
+				}
+			</ul>
+
+			<h3>Beschreibung</h3>
 			<p>{{ exhibitor?.text }}</p>
 			<ion-button
 				fill="outline"

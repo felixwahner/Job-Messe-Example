@@ -86,7 +86,8 @@ export class ExhibitorDetailsComponent {
 		}
 	}
 	public showOnMap() {
-		this.router.navigate(['map', this.exhibitor?.id]);
+		this.exhibitorsService.selectedExhibitor.set(this.exhibitor || null);
+		this.router.navigate(['map']);
 		this.modalCtrl.dismiss(null, 'cancel');
 	}
 }
